@@ -1,0 +1,436 @@
+body{
+  margin:0;
+  font-family:'Noto Serif SC',serif;
+  overflow:hidden;
+  color:#2a2a2a;
+}
+
+/* ESCENAS tipo app (swipe) */
+/* Cambia .scene por esto */
+.scene {
+  height: 100dvh; /* Usa dvh para evitar problemas con la barra de navegación de Chrome/Safari */
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none; /* Cambiamos opacity:0 por display:none para asegurar que no estorben */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  transition: opacity 0.8s;
+  opacity: 0;
+}
+
+/* Esta clase es la que mandará la visibilidad */
+.scene.active {
+  display: flex; 
+  opacity: 1;
+  z-index: 1;
+}
+
+/* Asegúrate de que el main ocupe todo */
+#main {
+  height: 100dvh;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+/* FONDO */
+.bg{
+  position:fixed;
+  inset:0;
+  background:url('fondo.jpg') center/cover no-repeat;
+  filter:grayscale(60%) brightness(1.1);
+  z-index:-3;
+}
+
+/* NIEBLA */
+.mist{
+  position:fixed;
+  inset:0;
+  background:radial-gradient(circle, rgba(255,255,255,0.4), transparent);
+  animation:mist 20s infinite alternate;
+  z-index:-2;
+}
+
+@keyframes mist{
+  to{transform:translateX(40px)}
+}
+
+/* PÉTALOS */
+#petals{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+}
+
+.petal{
+  position:absolute;
+  border-radius:60% 40% 60% 40%;
+  animation:fall linear forwards;
+}
+
+@keyframes fall{
+  to{transform:translateY(110vh) translateX(var(--drift))}
+}
+
+/* TINTA */
+#ink{
+  position:fixed;
+  width:100px;
+  height:100px;
+  background:radial-gradient(circle, rgba(0,0,0,0.2), transparent);
+  border-radius:50%;
+  pointer-events:none;
+  transform:translate(-50%,-50%) scale(0);
+  transition:0.2s;
+}
+
+/* BOTONES PNG */
+.btn-group{
+  display:flex;
+  gap:20px;
+}
+
+.img-btn{
+  width:120px;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.img-btn:hover{
+  transform:scale(1.1);
+}
+
+/* PLAYLIST */
+iframe{
+  width:90%;
+  max-width:320px;
+  height:180px;
+}
+
+/* MÚSICA */
+#music-btn{
+  position:fixed;
+  top:15px;
+  right:15px;
+  z-index:20;
+}
+
+/* 📱 MOBILE */
+@media (max-width:600px){
+  .img-btn{
+    width:90px;
+  }
+}
+
+/* CONTENEDOR BOTÓN */
+.img-btn-wrapper{
+  position:relative;
+  cursor:pointer;
+  transition:0.4s;
+}
+
+/* IMAGEN */
+.img-btn{
+  width:130px;
+  display:block;
+  transition:0.4s;
+  filter:brightness(0.95);
+}
+
+/* TEXTO ENCIMA */
+.btn-text{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  color:#fff;
+  font-size:14px;
+  letter-spacing:2px;
+  pointer-events:none;
+  text-shadow:0 0 8px rgba(0,0,0,0.6);
+}
+
+/* EFECTO HOVER (tinta/brillo) */
+.img-btn-wrapper::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle, rgba(255,255,255,0.2), transparent 70%);
+  opacity:0;
+  transition:0.4s;
+}
+
+.img-btn-wrapper:hover::after{
+  opacity:1;
+}
+
+/* ANIMACIÓN SUAVE */
+.img-btn-wrapper:hover{
+  transform:scale(1.08);
+}
+
+.img-btn-wrapper:active{
+  transform:scale(0.95);
+}
+
+/* BOTÓN DE MÚSICA */
+.music-control{
+  position:fixed;
+  top:20px;
+  right:20px;
+  z-index:30;
+}
+
+.music-control .img-btn{
+  width:80px;
+}
+
+/* EFECTO CUANDO ESTÁ SONANDO */
+.music-control.playing .img-btn{
+  animation:pulse 2s infinite;
+}
+
+@keyframes pulse{
+  0%{transform:scale(1)}
+  50%{transform:scale(1.1)}
+  100%{transform:scale(1)}
+}
+
+/* NUEVO */
+
+/* RESULTADO TINTA */
+#ink-result{
+  position:fixed;
+  inset:0;
+  background:radial-gradient(circle, rgba(0,0,0,0.85), transparent 70%);
+  opacity:0;
+  pointer-events:none;
+  transition:0.8s;
+  z-index:0;
+}
+
+#ink-result.show{
+  opacity:1;
+}
+
+/* TEXTO RESULTADO */
+#quiz-result{
+  margin-top:30px;
+  font-size:1.15em;
+  color:white;
+
+  max-width:600px;
+  text-align:center;
+  line-height:1.6;
+
+  text-align:justify; /* 👈 forma de párrafo */
+  text-align-last:center; /* 👈 última línea centrada */
+
+  word-spacing:2px; /* 👈 aire entre palabras */
+
+  /* ❌ sin caja */
+  background:none;
+  padding:0;
+  border-radius:0;
+  backdrop-filter:none;
+
+  /* ✨ legibilidad sin caja */
+  text-shadow:
+    0 0 10px rgba(0,0,0,1),
+    0 0 25px rgba(0,0,0,0.8),
+    0 0 40px rgba(0,0,0,0.6);
+
+  opacity:0;
+  transform:scale(0.9);
+  transition:1s;
+}
+
+#quiz-result.show{
+  opacity:1;
+  transform:scale(1);
+}
+
+#quiz-result{
+  position:relative;
+  z-index:2;
+}
+
+/* ✨ efecto tinta en letras */
+.ink-word{
+  opacity:1;
+  transform:translateY(0) scale(1);
+  transition:0.5s ease;
+}
+
+.ink-word.hidden{
+  opacity:0;
+  transform:translateY(8px) scale(0.98);
+}
+
+.ink-word{
+  transition-duration: calc(0.4s + var(--rand, 0s));
+}
+
+@keyframes inkWord{
+  to{
+    opacity:1;
+    /*filter:blur(0);*/
+  }
+}
+
+@keyframes inkReveal{
+  to{
+    opacity:1;
+    /*filter:blur(0);*/
+  }
+}
+
+.quiz-option{
+  position:relative;
+  width:120px;
+  height:120px; /* 🔥 fija un área consistente */
+  margin:10px;
+  cursor:pointer;
+}
+
+.quiz-option img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+
+.quiz-option{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* 🔥 ZONA DE TEXTO AJUSTABLE */
+.opt-text{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+
+  width:85%;
+  text-align:center;
+
+  color:white;
+  font-size:13px;
+  line-height:1.2;
+
+  text-shadow:
+    0 0 8px rgba(0,0,0,0.9),
+    0 0 15px rgba(0,0,0,0.6);
+
+  pointer-events:none;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.title{
+  font-size:1.3em;
+  color:#f0e6d2;
+}
+
+/* 🎨 CLAN COLORES */
+.clan-jiang{ color:#af6eb9; } /* verde loto */
+.clan-lan{ color:#aacef2; }   /* azul suave */
+.clan-wen{ color:#b42020; }   /* rojo tenue */
+.clan-jin{ color:#f7d774; }   /* dorado */
+.clan-nie{ color:#93a992; }   /* gris acero */
+.clan-wei{ color:#d50000; }   /* morado etéreo */
+
+/* ✨ PALABRAS CLAVE */
+.key{
+  color:#ffffff;
+  font-weight:500;
+  text-shadow:
+    0 0 6px rgba(255,255,255,0.5),
+    0 0 12px rgba(255,255,255,0.3);
+}
+
+/* PLAYLIST */
+.playlist-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:20px;
+  width:90%;
+  max-width:500px;
+}
+
+/* TARJETA */
+.song{
+  position:relative;
+  cursor:pointer;
+  overflow:hidden;
+  border-radius:14px;
+  transition:0.4s;
+}
+
+/* IMAGEN */
+.song img{
+  width:100%;
+  height:180px;
+  object-fit:cover;
+  filter:grayscale(30%) brightness(0.9);
+  transition:0.5s;
+}
+
+/* TEXTO */
+.song span{
+  position:absolute;
+  bottom:10px;
+  left:50%;
+  transform:translateX(-50%);
+  color:white;
+  font-size:13px;
+  letter-spacing:1px;
+  text-shadow:0 0 10px rgba(0,0,0,0.9);
+}
+
+/* HOVER ✨ */
+.song:hover img{
+  transform:scale(1.1);
+  filter:grayscale(0%) brightness(1);
+}
+
+.song:hover{
+  transform:translateY(-5px);
+}
+
+.song::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle, rgba(0,0,0,0.3), transparent 70%);
+  opacity:0;
+  transition:0.4s;
+}
+
+.song:active::after{
+  opacity:1;
+}
+
+/* 📱 MOBILE */
+@media (max-width:600px){
+  .img-btn{
+    width:90px;
+  }
+
+  .btn-text{
+    font-size:12px;
+  }
+
+  .music-control .img-btn{
+    width:60px;
+  }
+}

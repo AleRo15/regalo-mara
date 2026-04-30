@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para ti</title>
+
+<link rel="stylesheet" href="regalo.css">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<audio id="music" loop></audio>
+<audio id="ambient" loop></audio>
+
+<!-- BOTÓN MÚSICA (imagen) -->
+<div class="music-control" onclick="toggleMusic()">
+  <img src="tres.png" class="img-btn">
+  <span class="btn-text">音</span>
+</div>
+
+<div class="bg"></div>
+<div class="mist"></div>
+<div id="petals"></div>
+<div id="ink"></div>
+
+<main id="main">
+
+<section class="scene intro">
+  <h1>予你</h1>
+  <p>Para ti, en cualquier vida…</p>
+</section>
+
+<section class="scene poem">
+  <p id="letter"></p>
+</section>
+
+<section class="scene playlist">
+
+  <h2>🎧 Nuestra música</h2>
+
+  <div class="playlist-grid">
+
+    <div class="song" onclick="openSong('https://youtu.be/THEUNTAMED1')">
+      <img src="song1.png">
+      <span>Wuji (无羁)</span>
+    </div>
+
+    <div class="song" onclick="openSong('https://youtu.be/THEUNTAMED2')">
+      <img src="song2.png">
+      <span>Bu Wang (不忘)</span>
+    </div>
+
+    <div class="song" onclick="openSong('https://youtu.be/THEUNTAMED3')">
+      <img src="song2.png">
+      <span>Yi Nan Ping (意难平)</span>
+    </div>
+
+    <div class="song" onclick="openSong('https://youtu.be/THEUNTAMED4')">
+      <img src="song1.png">
+      <span>Hong Chen (红尘)</span>
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ELECCIÓN -->
+<section class="scene quiz">
+
+  <h2>¿A qué clan perteneces?</h2>
+
+  <div id="quiz-box">
+    <p id="question"></p>
+
+    <div class="answers">
+
+  <div class="quiz-option" onclick="answer(0)">
+    <img src="uno.png">
+    <span class="opt-text"></span>
+  </div>
+
+  <div class="quiz-option" onclick="answer(1)">
+    <img src="dos.png">
+    <span class="opt-text"></span>
+  </div>
+
+  <div class="quiz-option" onclick="answer(2)">
+    <img src="tres.png">
+    <span class="opt-text"></span>
+  </div>
+
+</div>
+  </div>
+
+  <p id="quiz-result"></p>
+
+  <!-- TINTA RESULTADO -->
+  <div id="ink-result"></div>
+
+</section>
+
+<section class="scene final">
+  <p>El tiempo pasa…</p>
+  <h2>pero tú siempre serás mi hogar</h2>
+</section>
+
+</main>
+
+<script src="regalo.js"></script>
+</body>
+</html>
