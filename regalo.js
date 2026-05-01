@@ -64,8 +64,8 @@ document.addEventListener('touchstart', e => {
 document.addEventListener('touchmove', e => {
   let currentY = e.touches[0].clientY;
 
-  // 👇 si el movimiento es pequeño → scroll normal
-  if (Math.abs(startY - currentY) < 30) {
+  // 👇 detectar scroll real (movimiento largo pero no swipe)
+  if (Math.abs(startY - currentY) > 10) {
     isScrolling = true;
   }
 });
@@ -76,18 +76,21 @@ document.addEventListener('touchend', e => {
   // 🚫 bloquear completamente en carta
   if (scenes[current].classList.contains("carta")) return;
 
-  // 🚫 si fue scroll, no cambiar escena
-  if (isScrolling) return;
-
   let endY = e.changedTouches[0].clientY;
+  let diff = startY - endY;
 
-  // 👇 umbral más alto para evitar sensibilidad exagerada
-  if (startY - endY > 70 && current < scenes.length - 1) {
-    showScene(current + 1);
+  // 👇 SI fue swipe real (movimiento grande)
+  if (Math.abs(diff) > 70) {
+
+    if(diff > 0 && current < scenes.length - 1){
+      showScene(current + 1);
+    }
+    else if(diff < 0 && current > 0){
+      showScene(current - 1);
+    }
+
   }
-  else if (endY - startY > 70 && current > 0) {
-    showScene(current - 1);
-  }
+
 });
 
 // ================= TINTA CURSOR =================
