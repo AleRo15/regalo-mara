@@ -32,8 +32,8 @@ function showScene(index){
 showScene(current);
 
 let scrolling = false;
-let isScrolling = false;
 let startY = 0;
+let isSwiping = false;
 
 // ================= SCROLL (PC) =================
 document.addEventListener('wheel', e => {
@@ -50,47 +50,42 @@ document.addEventListener('wheel', e => {
     showScene(current - 1);
   }
 
-  setTimeout(() => scrolling = false, 1000);
+  setTimeout(() => scrolling = false, 800);
 });
 
 
 // ================= TOUCH (MÓVIL) =================
+
+// iniciar toque
 document.addEventListener('touchstart', e => {
   startY = e.touches[0].clientY;
-  isScrolling = false; // reiniciar estado
+  isSwiping = true;
 });
 
-
-document.addEventListener('touchmove', e => {
-  let currentY = e.touches[0].clientY;
-
-  // 👇 detectar scroll real (movimiento largo pero no swipe)
-  if (Math.abs(startY - currentY) > 10) {
-    isScrolling = true;
-  }
-});
-
-
+// terminar toque
 document.addEventListener('touchend', e => {
 
   // 🚫 bloquear completamente en carta
   if (scenes[current].classList.contains("carta")) return;
 
+  if (!isSwiping) return;
+
   let endY = e.changedTouches[0].clientY;
   let diff = startY - endY;
 
-  // 👇 SI fue swipe real (movimiento grande)
-  if (Math.abs(diff) > 70) {
+  // 👇 solo swipes claros (evita cambios accidentales)
+  if (Math.abs(diff) > 80) {
 
-    if(diff > 0 && current < scenes.length - 1){
+    if (diff > 0 && current < scenes.length - 1) {
       showScene(current + 1);
-    }
-    else if(diff < 0 && current > 0){
+    } 
+    else if (diff < 0 && current > 0) {
       showScene(current - 1);
     }
 
   }
 
+  isSwiping = false;
 });
 
 // ================= TINTA CURSOR =================
