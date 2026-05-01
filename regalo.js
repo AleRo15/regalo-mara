@@ -400,7 +400,9 @@ function writeText(text, container, clanClass){
   w.includes("Wen") ||
   w.includes("Jin") ||
   w.includes("Nie") ||
-  w.includes("Wei")
+  w.includes("Wei") ||
+  w.includes("Wuxian") ||
+  w.includes("Como")
 ){
   span.classList.add(clanClass);
 }
