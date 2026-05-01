@@ -5,36 +5,49 @@ body{
   color:#2a2a2a;
 }
 
-/* ESCENAS tipo app (swipe) */
-/* Cambia .scene por esto */
+/* CONTENEDOR PRINCIPAL */
+#main {
+  height: 100dvh;
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  position: relative;
+}
+
+/* ESCENAS */
 .scene {
-  height: 100dvh; /* Usa dvh para evitar problemas con la barra de navegación de Chrome/Safari */
+  height: 100dvh;
   width: 100%;
   position: absolute;
   top: 0;
   left: 0;
-  display: none; /* Cambiamos opacity:0 por display:none para asegurar que no estorben */
+
+  display: none;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
   text-align: center;
-  transition: opacity 0.8s;
+  padding: 0 20px;
+
+  box-sizing: border-box;
   opacity: 0;
+  transition: opacity 0.8s;
 }
 
-/* Esta clase es la que mandará la visibilidad */
 .scene.active {
-  display: flex; 
+  display: flex;
   opacity: 1;
   z-index: 1;
 }
 
-/* Asegúrate de que el main ocupe todo */
-#main {
-  height: 100dvh;
+/* TEXTOS */
+.scene p,
+.scene h1,
+.scene h2{
+  max-width: 500px;
   width: 100%;
-  overflow: hidden;
-  position: relative;
+  margin: 0 auto;
 }
 
 /* FONDO */
@@ -76,7 +89,7 @@ body{
   to{transform:translateY(110vh) translateX(var(--drift))}
 }
 
-/* TINTA */
+/* TINTA CURSOR */
 #ink{
   position:fixed;
   width:100px;
@@ -88,96 +101,175 @@ body{
   transition:0.2s;
 }
 
-/* BOTONES PNG */
-.btn-group{
-  display:flex;
-  gap:20px;
+/* TRANSICIÓN HUMO NEGRO */
+.smoke-out{
+  animation: smokeOut 0.8s forwards;
 }
 
-.img-btn{
-  width:120px;
+@keyframes smokeOut{
+  0%{ opacity:1; filter:blur(0); }
+  100%{
+    opacity:0;
+    filter:blur(20px) brightness(0.3);
+    transform:scale(1.05);
+  }
+}
+
+/* TRANSICIÓN ENERGÍA ESPIRITUAL (blanco) */
+.spirit-out{
+  animation: spiritOut 0.8s forwards;
+}
+
+@keyframes spiritOut{
+  0%{ opacity:1; }
+  100%{
+    opacity:0;
+    filter:brightness(2) blur(10px);
+  }
+}
+
+/* GALERÍA */
+.gallery{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:20px;
+  width:90%;
+  max-width:600px;
+}
+
+.memory{
+  text-align:center;
+  transition:0.4s;
+}
+
+.memory img{
+  width:100%;
+  border-radius:12px;
+  transition:0.4s;
+}
+
+.memory:hover img{
+  transform:scale(1.05);
+}
+
+.memory p{
+  margin-top:8px;
+  font-size:13px;
+}
+
+/* DECRETO */
+.decreto-box{
+  background:url("pergamino2.png") center/cover no-repeat;
+  padding:100px 60px;
+  max-width:500px;
+  text-align:left;
+  line-height:1.8;
+  filter:drop-shadow(0 10px 25px rgba(0,0,0,0.5));
+}
+
+.decreto-box ul{
+  padding-left:20px;
+}
+
+/* MINI JUEGO */
+.cups{
+  display:flex;
+  gap:20px;
+  margin-top:20px;
+}
+
+.cup{
+  width:100px;
+  height:120px;
+  background:url("jarra.png") center/contain no-repeat;
   cursor:pointer;
   transition:0.3s;
 }
 
-.img-btn:hover{
+.cup:hover{
+  transform:translateY(-5px);
+}
+
+/* REGALO DIGITAL */
+.gift-btn{
+  display:inline-block;
+  margin-top:20px;
+  padding:15px 25px;
+  background:linear-gradient(135deg,#fff,#ddd);
+  color:#111;
+  text-decoration:none;
+  border-radius:10px;
+  transition:0.3s;
+}
+
+.gift-btn:hover{
   transform:scale(1.1);
 }
 
-/* PLAYLIST */
-iframe{
+/* ================= PLAYLIST (FIX RESTAURADO) ================= */
+
+.playlist-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:20px;
   width:90%;
-  max-width:320px;
-  height:180px;
+  max-width:500px;
 }
 
-/* MÚSICA */
-#music-btn{
-  position:fixed;
-  top:15px;
-  right:15px;
-  z-index:20;
-}
-
-/* 📱 MOBILE */
-@media (max-width:600px){
-  .img-btn{
-    width:90px;
-  }
-}
-
-/* CONTENEDOR BOTÓN */
-.img-btn-wrapper{
+.song{
   position:relative;
   cursor:pointer;
+  overflow:hidden;
+  border-radius:14px;
   transition:0.4s;
+  z-index:1; /* 👈 evita que otras capas interfieran */
 }
 
-/* IMAGEN */
-.img-btn{
-  width:130px;
-  display:block;
-  transition:0.4s;
-  filter:brightness(0.95);
+.song img{
+  width:100%;
+  height:180px;
+  object-fit:cover;
+  filter:grayscale(30%) brightness(0.9);
+  transition:0.5s;
 }
 
-/* TEXTO ENCIMA */
-.btn-text{
+.song span{
   position:absolute;
-  top:50%;
+  bottom:10px;
   left:50%;
-  transform:translate(-50%,-50%);
-  color:#fff;
-  font-size:14px;
-  letter-spacing:2px;
+  transform:translateX(-50%);
+  color:white;
+  font-size:13px;
+  text-shadow:0 0 10px rgba(0,0,0,0.9);
   pointer-events:none;
-  text-shadow:0 0 8px rgba(0,0,0,0.6);
 }
 
-/* EFECTO HOVER (tinta/brillo) */
-.img-btn-wrapper::after{
+/* HOVER SUAVE ORIGINAL */
+.song:hover img{
+  transform:scale(1.1);
+  filter:grayscale(0%) brightness(1);
+}
+
+.song:hover{
+  transform:translateY(-5px);
+}
+
+/* 👇 overlay sutil (no rompe tu diseño, lo mejora) */
+.song::after{
   content:"";
   position:absolute;
   inset:0;
-  background:radial-gradient(circle, rgba(255,255,255,0.2), transparent 70%);
+  background:radial-gradient(circle, rgba(255,255,255,0.15), transparent 70%);
   opacity:0;
   transition:0.4s;
+  pointer-events:none;
 }
 
-.img-btn-wrapper:hover::after{
+.song:hover::after{
   opacity:1;
 }
 
-/* ANIMACIÓN SUAVE */
-.img-btn-wrapper:hover{
-  transform:scale(1.08);
-}
-
-.img-btn-wrapper:active{
-  transform:scale(0.95);
-}
-
-/* BOTÓN DE MÚSICA */
+/* BOTÓN MÚSICA */
 .music-control{
   position:fixed;
   top:20px;
@@ -189,7 +281,6 @@ iframe{
   width:80px;
 }
 
-/* EFECTO CUANDO ESTÁ SONANDO */
 .music-control.playing .img-btn{
   animation:pulse 2s infinite;
 }
@@ -200,101 +291,107 @@ iframe{
   100%{transform:scale(1)}
 }
 
-/* NUEVO */
-
-/* RESULTADO TINTA */
-#ink-result{
-  position:fixed;
-  inset:0;
-  background:radial-gradient(circle, rgba(0,0,0,0.85), transparent 70%);
-  opacity:0;
-  pointer-events:none;
-  transition:0.8s;
-  z-index:0;
-}
-
-#ink-result.show{
-  opacity:1;
-}
-
-/* TEXTO RESULTADO */
-#quiz-result{
-  margin-top:30px;
-  font-size:1.15em;
-  color:white;
-
-  max-width:600px;
-  text-align:center;
-  line-height:1.6;
-
-  text-align:justify; /* 👈 forma de párrafo */
-  text-align-last:center; /* 👈 última línea centrada */
-
-  word-spacing:2px; /* 👈 aire entre palabras */
-
-  /* ❌ sin caja */
-  background:none;
-  padding:0;
-  border-radius:0;
-  backdrop-filter:none;
-
-  /* ✨ legibilidad sin caja */
-  text-shadow:
-    0 0 10px rgba(0,0,0,1),
-    0 0 25px rgba(0,0,0,0.8),
-    0 0 40px rgba(0,0,0,0.6);
-
-  opacity:0;
-  transform:scale(0.9);
-  transition:1s;
-}
-
-#quiz-result.show{
-  opacity:1;
-  transform:scale(1);
-}
-
-#quiz-result{
+/* BOTONES IMAGEN */
+.img-btn{
+  width:130px;
+  display:block;
+  cursor:pointer;
+  transition:0.3s;
   position:relative;
-  z-index:2;
 }
 
-/* ✨ efecto tinta en letras */
-.ink-word{
-  opacity:1;
-  transform:translateY(0) scale(1);
-  transition:0.5s ease;
+.img-btn:hover{
+  transform:scale(1.1);
 }
 
-.ink-word.hidden{
-  opacity:0;
-  transform:translateY(8px) scale(0.98);
+/* TEXTO BOTÓN */
+.btn-text{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  color:#fff;
+  font-size:14px;
+  letter-spacing:2px;
+  font-weight:600;
+  text-transform:uppercase;
+
+  pointer-events:none;
+  text-shadow:0 0 8px rgba(0,0,0,0.6);
 }
 
-.ink-word{
-  transition-duration: calc(0.4s + var(--rand, 0s));
+/* ================= QUIZ ================= */
+
+#question{
+  max-width:500px;
+  margin-bottom:20px;
+  line-height:1.5;
+  color:#111;
+  text-shadow:
+    0 0 6px rgba(255,255,255,0.9),
+    0 0 12px rgba(255,255,255,0.7),
+    0 0 18px rgba(255,255,255,0.5);
 }
 
-@keyframes inkWord{
-  to{
-    opacity:1;
-    /*filter:blur(0);*/
-  }
+.answers{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:15px;
+  max-width:400px;
 }
 
-@keyframes inkReveal{
-  to{
-    opacity:1;
-    /*filter:blur(0);*/
-  }
-}
-
+/* BOTONES QUIZ - AHORA FLEXIBLES */
 .quiz-option{
   position:relative;
-  width:120px;
-  height:120px; /* 🔥 fija un área consistente */
-  margin:10px;
+  /* CAMBIO: Eliminamos ancho fijo */
+  /* width: 110px; */ 
+  
+  /* NUEVO: Ancho mínimo y padding para crecer */
+  min-width: 110px; 
+  height: 110px;
+  padding: 0 15px; /* Espacio extra a los lados */
+  box-sizing: border-box; /* Importante para el padding */
+  
   cursor:pointer;
+  transition: transform 0.25s ease, filter 0.25s ease, width 0.3s ease; /* Añadimos width a la transición */
+  
+  display: flex; /* Para centrar el texto internamente */
+  align-items: center;
+  justify-content: center;
+}
+
+.quiz-option:hover{
+  transform: translateY(-6px) scale(1.08);
+  filter: brightness(1.1);
+}
+
+.quiz-option:active{
+  transform: scale(0.95);
+}
+
+/* glow */
+.quiz-option::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:14px; /* Un poco de radio para que no sea cuadrado perfecto */
+  background:radial-gradient(circle, rgba(255,255,255,0.25), transparent 70%);
+  opacity:0;
+  transition:0.3s;
+  pointer-events:none;
+}
+
+.quiz-option:hover::after{
+  opacity:1;
+}
+
+/* selección */
+.quiz-option.selected{
+  transform: scale(1.15);
+  filter: brightness(1.2);
 }
 
 .quiz-option img{
@@ -302,135 +399,214 @@ iframe{
   inset:0;
   width:100%;
   height:100%;
-  object-fit:contain;
+  object-fit:fill; /* 'fill' para que la imagen se estire con el contenedor */
 }
 
-.quiz-option{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-/* 🔥 ZONA DE TEXTO AJUSTABLE */
 .opt-text{
-  position:absolute;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
+  position:relative; /* Cambiado de absolute a relative */
+  /* left:50%; top:50%; transform:translate(-50%,-50%); */
+  
+  width: auto; /* Ancho automático */
+  max-width: 100%; /* No superar el botón */
+  
+  text-align:center;
+  color:white;
+  font-size:12px;
+  font-weight: 500;
+  text-shadow:0 0 10px rgba(0,0,0,0.9);
+  
+  z-index: 1; /* Encima de la imagen */
+}
 
-  width:85%;
+/* ================= RESULTADO ================= */
+
+/* TINTA */
+#ink-result{
+  position:fixed;
+  inset:0;
+  background:radial-gradient(circle, rgba(0,0,0,0.85), transparent 70%);
+  opacity:0;
+  pointer-events:none;
+  transition:0.8s;
+  z-index:5;
+}
+
+#ink-result.show{
+  opacity:1;
+}
+
+/* TEXTO RESULTADO ENCIMA */
+#quiz-result{
+  margin-top:30px;
+  font-size:1.1em;
+  color:white;
+  max-width:600px;
+  line-height:1.6;
+
   text-align:center;
 
-  color:white;
-  font-size:13px;
-  line-height:1.2;
-
   text-shadow:
-    0 0 8px rgba(0,0,0,0.9),
-    0 0 15px rgba(0,0,0,0.6);
+    0 0 8px rgba(0,0,0,1),
+    0 0 20px rgba(0,0,0,0.9),
+    0 0 40px rgba(0,0,0,0.8);
 
-  pointer-events:none;
+  /* NUEVO: No ocultamos el contenedor entero, solo las palabras */
+  opacity:1; 
+  transform:scale(1);
+  transition: opacity 0.5s;
 
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  position:relative;
+  z-index:10; /* 👈 encima de la tinta */
 }
 
-.title{
-  font-size:1.3em;
-  color:#f0e6d2;
+#quiz-result.show{
+  opacity:1;
 }
 
-/* 🎨 CLAN COLORES */
-.clan-jiang{ color:#af6eb9; } /* verde loto */
-.clan-lan{ color:#aacef2; }   /* azul suave */
-.clan-wen{ color:#b42020; }   /* rojo tenue */
-.clan-jin{ color:#f7d774; }   /* dorado */
-.clan-nie{ color:#93a992; }   /* gris acero */
-.clan-wei{ color:#d50000; }   /* morado etéreo */
+#quiz-result{
+  word-break: normal;
+  overflow-wrap: break-word;
+}
 
-/* ✨ PALABRAS CLAVE */
+#quiz-result{
+  line-height: 1.8;
+  letter-spacing: 0.3px;
+}
+
+/* ✨ ESTILOS PARA LA ANIMACIÓN DE PALABRAS ✨ */
+.ink-word {
+  opacity: 0;
+  transform: scale(1.2); /* Empieza un poco más grande */
+  filter: blur(5px); /* Y borrosa */
+  display: inline;
+  white-space: pre-wrap;
+  transition: opacity 0.4s ease, transform 0.4s ease, filter 0.4s ease;
+  
+  /* Usamos la variable --rand que JS calculará */
+  transition-delay: var(--rand); 
+}
+
+/* Estado visible de la palabra */
+.ink-word:not(.hidden) {
+  opacity: 1;
+  transform: scale(1);
+  filter: blur(0);
+}
+
+/* ================= COLORES CLAN ================= */
+
+.clan-jiang{ color:#af6eb9 !important; }
+.clan-lan{ color:#aacef2 !important; }
+.clan-wen{ color:#b42020 !important; }
+.clan-jin{ color:#f7d774 !important; }
+.clan-nie{ color:#93a992 !important; }
+.clan-wei{ color:#d50000 !important; }
+
 .key{
-  color:#ffffff;
-  font-weight:500;
   text-shadow:
     0 0 6px rgba(255,255,255,0.5),
     0 0 12px rgba(255,255,255,0.3);
 }
 
-/* PLAYLIST */
-.playlist-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
-  gap:20px;
-  width:90%;
-  max-width:500px;
-}
+/* ================= CARTA ================= */
 
-/* TARJETA */
-.song{
-  position:relative;
+.open-letter{
+  margin-top:20px;
   cursor:pointer;
-  overflow:hidden;
-  border-radius:14px;
-  transition:0.4s;
+  position:relative;
+  transition:all 0.3s ease;
+  animation:pulseSoft 2.5s infinite;
 }
 
-/* IMAGEN */
-.song img{
-  width:100%;
-  height:180px;
-  object-fit:cover;
-  filter:grayscale(30%) brightness(0.9);
-  transition:0.5s;
+.open-letter:hover{
+  transform:scale(1.12);
+  filter:brightness(1.1);
+  animation:none;
 }
 
-/* TEXTO */
-.song span{
-  position:absolute;
-  bottom:10px;
-  left:50%;
-  transform:translateX(-50%);
-  color:white;
-  font-size:13px;
-  letter-spacing:1px;
-  text-shadow:0 0 10px rgba(0,0,0,0.9);
-}
-
-/* HOVER ✨ */
-.song:hover img{
-  transform:scale(1.1);
-  filter:grayscale(0%) brightness(1);
-}
-
-.song:hover{
-  transform:translateY(-5px);
-}
-
-.song::after{
+.open-letter::after{
   content:"";
   position:absolute;
   inset:0;
-  background:radial-gradient(circle, rgba(0,0,0,0.3), transparent 70%);
+  background:radial-gradient(circle, rgba(255,255,255,0.4), transparent 70%);
   opacity:0;
   transition:0.4s;
+  border-radius:50%;
 }
 
-.song:active::after{
+.open-letter:hover::after{
   opacity:1;
 }
 
-/* 📱 MOBILE */
+@keyframes pulseSoft{
+  0%{transform:scale(1)}
+  50%{transform:scale(1.05)}
+  100%{transform:scale(1)}
+}
+
+/* CARTA */
+.carta-box{
+  width:90%;
+  max-width:650px;
+
+  height:0;
+  overflow:hidden;
+
+  opacity:0;
+  transform:scaleY(0);
+  transform-origin:top;
+
+  transition:all 0.8s ease;
+}
+
+.carta-box.show {
+  height:auto;
+  min-height:80vh;
+
+  background:url("pergamino.png") no-repeat;
+  background-size:100% 100%;
+
+  padding:100px 80px;
+
+  opacity:1;
+  transform:scaleY(1);
+
+  animation:desenrollar 1.2s ease-out forwards;
+}
+
+#cartaTexto{
+  width:100%;
+  max-width:450px;
+  margin:0 auto;
+}
+
+.scene.carta{
+  display:none;
+  flex-direction:column;
+  justify-content:flex-start;
+  align-items:center;
+  padding:60px 20px;
+  min-height:100vh;
+  height:auto;
+}
+
+.scene.carta.active{
+  display:flex;
+}
+
+@keyframes desenrollar{
+  0%{transform:scaleY(0); opacity:0;}
+  100%{transform:scaleY(1); opacity:1;}
+}
+
+/* MOBILE */
 @media (max-width:600px){
-  .img-btn{
-    width:90px;
+  .carta-box.show{
+    padding:90px 30px;
+    font-size:0.95em;
   }
 
-  .btn-text{
-    font-size:12px;
-  }
-
-  .music-control .img-btn{
-    width:60px;
+  #cartaTexto{
+    max-width:85%;
   }
 }
