@@ -31,63 +31,46 @@ function showScene(index){
 
 showScene(current);
 
-let scrolling = false;
-let startY = 0;
-let isSwiping = false;
+// ================= SCROLL + SWIPE =================
+let scrolling=false;
 
-// ================= SCROLL (PC) =================
-document.addEventListener('wheel', e => {
+document.addEventListener('wheel',e=>{
 
-  // 🚫 NO cambiar escena si estás en carta
-  if (scenes[current].classList.contains("carta")) return;
+  // 👇 NO cambiar escena si estás en carta
+  if(scenes[current].classList.contains("carta")) return;
 
-  if (scrolling) return;
-  scrolling = true;
+  if(scrolling) return;
+  scrolling=true;
 
-  if (e.deltaY > 0 && current < scenes.length - 1) {
-    showScene(current + 1);
-  } else if (e.deltaY < 0 && current > 0) {
-    showScene(current - 1);
+  if(e.deltaY>0 && current<scenes.length-1){
+    showScene(current+1);
+  }else if(e.deltaY<0 && current>0){
+    showScene(current-1);
   }
 
-  setTimeout(() => scrolling = false, 800);
+  setTimeout(()=>scrolling=false,1000);
 });
 
+let startY=0;
 
-// ================= TOUCH (MÓVIL) =================
-
-// iniciar toque
-document.addEventListener('touchstart', e => {
-  startY = e.touches[0].clientY;
-  isSwiping = true;
+document.addEventListener('touchstart',e=>{
+  startY=e.touches[0].clientY;
 });
 
-// terminar toque
-document.addEventListener('touchend', e => {
+document.addEventListener('touchend',e=>{
 
-  // 🚫 bloquear completamente en carta
-  if (scenes[current].classList.contains("carta")) return;
+  // 👇 NO cambiar escena si estás en carta
+  if(scenes[current].classList.contains("carta")) return;
 
-  if (!isSwiping) return;
+  let endY=e.changedTouches[0].clientY;
 
-  let endY = e.changedTouches[0].clientY;
-  let diff = startY - endY;
-
-  // 👇 solo swipes claros (evita cambios accidentales)
-  if (Math.abs(diff) > 80) {
-
-    if (diff > 0 && current < scenes.length - 1) {
-      showScene(current + 1);
-    } 
-    else if (diff < 0 && current > 0) {
-      showScene(current - 1);
-    }
-
+  if(startY-endY>50 && current<scenes.length-1){
+    showScene(current+1);
   }
-
-  isSwiping = false;
+  else if(endY-startY>50 && current>0){
+    showScene(current-1);
+  }
 });
-
 // ================= TINTA CURSOR =================
 const ink=document.getElementById('ink');
 
