@@ -594,6 +594,10 @@ body{
   display:flex;
 }
 
+.scene.carta{
+  overflow-y:auto;
+}
+
 @keyframes desenrollar{
   0%{transform:scaleY(0); opacity:0;}
   100%{transform:scaleY(1); opacity:1;}
@@ -602,11 +606,14 @@ body{
 /* MOBILE */
 @media (max-width:600px){
   .carta-box.show{
-    padding:90px 30px;
-    font-size:0.95em;
+    padding:140px 35px; /* 👈 más aire arriba/abajo */
+    font-size:1em; /* 👈 ligeramente más legible */
+    line-height:1.7; /* 👈 mejora lectura */
   }
 
   #cartaTexto{
-    max-width:85%;
+    padding-top:70px;    /* 👈 MÁS espacio arriba */
+    padding-bottom:60px; /* 👈 MÁS espacio abajo */
   }
+  
 }
