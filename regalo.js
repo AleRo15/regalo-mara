@@ -35,6 +35,10 @@ showScene(current);
 let scrolling=false;
 
 document.addEventListener('wheel',e=>{
+
+  // 👇 NO cambiar escena si estás en carta
+  if(scenes[current].classList.contains("carta")) return;
+
   if(scrolling) return;
   scrolling=true;
 
@@ -54,6 +58,10 @@ document.addEventListener('touchstart',e=>{
 });
 
 document.addEventListener('touchend',e=>{
+
+  // 👇 NO cambiar escena si estás en carta
+  if(scenes[current].classList.contains("carta")) return;
+
   let endY=e.changedTouches[0].clientY;
 
   if(startY-endY>50 && current<scenes.length-1){
@@ -442,5 +450,11 @@ function checkJar(el,win){
   }else{
     el.style.opacity="0.3";
     fb.innerText="Jarra vacía...";
+  }
+}
+
+function nextScene(){
+  if(current < scenes.length - 1){
+    showScene(current + 1);
   }
 }
