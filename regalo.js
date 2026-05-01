@@ -31,44 +31,62 @@ function showScene(index){
 
 showScene(current);
 
-// ================= SCROLL + SWIPE =================
-let scrolling=false;
+let scrolling = false;
+let isScrolling = false;
+let startY = 0;
 
-document.addEventListener('wheel',e=>{
+// ================= SCROLL (PC) =================
+document.addEventListener('wheel', e => {
 
-  // 👇 NO cambiar escena si estás en carta
-  if(scenes[current].classList.contains("carta")) return;
+  // 🚫 NO cambiar escena si estás en carta
+  if (scenes[current].classList.contains("carta")) return;
 
-  if(scrolling) return;
-  scrolling=true;
+  if (scrolling) return;
+  scrolling = true;
 
-  if(e.deltaY>0 && current<scenes.length-1){
-    showScene(current+1);
-  }else if(e.deltaY<0 && current>0){
-    showScene(current-1);
+  if (e.deltaY > 0 && current < scenes.length - 1) {
+    showScene(current + 1);
+  } else if (e.deltaY < 0 && current > 0) {
+    showScene(current - 1);
   }
 
-  setTimeout(()=>scrolling=false,1000);
+  setTimeout(() => scrolling = false, 1000);
 });
 
-let startY=0;
 
-document.addEventListener('touchstart',e=>{
-  startY=e.touches[0].clientY;
+// ================= TOUCH (MÓVIL) =================
+document.addEventListener('touchstart', e => {
+  startY = e.touches[0].clientY;
+  isScrolling = false; // reiniciar estado
 });
 
-document.addEventListener('touchend',e=>{
 
-  // 👇 NO cambiar escena si estás en carta
-  if(scenes[current].classList.contains("carta")) return;
+document.addEventListener('touchmove', e => {
+  let currentY = e.touches[0].clientY;
 
-  let endY=e.changedTouches[0].clientY;
-
-  if(startY-endY>50 && current<scenes.length-1){
-    showScene(current+1);
+  // 👇 si el movimiento es pequeño → scroll normal
+  if (Math.abs(startY - currentY) < 30) {
+    isScrolling = true;
   }
-  else if(endY-startY>50 && current>0){
-    showScene(current-1);
+});
+
+
+document.addEventListener('touchend', e => {
+
+  // 🚫 bloquear completamente en carta
+  if (scenes[current].classList.contains("carta")) return;
+
+  // 🚫 si fue scroll, no cambiar escena
+  if (isScrolling) return;
+
+  let endY = e.changedTouches[0].clientY;
+
+  // 👇 umbral más alto para evitar sensibilidad exagerada
+  if (startY - endY > 70 && current < scenes.length - 1) {
+    showScene(current + 1);
+  }
+  else if (endY - startY > 70 && current > 0) {
+    showScene(current - 1);
   }
 });
 
