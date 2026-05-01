@@ -1,21 +1,52 @@
-// ESCENAS
-const scenes=document.querySelectorAll('.scene');
-let current=0;
+// ================= ESCENAS =================
+const scenes = document.querySelectorAll('.scene');
+let current = 0;
 
 function showScene(index){
-  scenes.forEach(s=>s.classList.remove('active'));
-  scenes[index].classList.add('active');
+  if(index === current) return;
 
-  // 👉 cargar quiz cuando entras a esa escena
-  if(scenes[index].classList.contains("quiz")){
-    currentQ = 0;
-    score = { jiang:0, lan:0, wen:0, jin:0, nie:0, wei:0 };
-    loadQuestion();
-  }
+  scenes[current].classList.add('exit');
+
+  setTimeout(()=>{
+    scenes.forEach(s => s.classList.remove('active','exit'));
+    scenes[index].classList.add('active');
+    current = index;
+
+    // 👉 activar quiz
+    if(scenes[index].classList.contains("quiz")){
+      currentQ = 0;
+      score = { jiang:0, lan:0, wen:0, jin:0, nie:0, wei:0 };
+      loadQuestion();
+    }
+
+    // 👉 reiniciar carta animada
+    if(scenes[index].classList.contains("poem")){
+      document.getElementById('letter').innerHTML="";
+      cartaIndex=0;
+      type();
+    }
+
+  },700);
 }
+
 showScene(current);
 
-// 👉 SWIPE
+// ================= SCROLL + SWIPE =================
+let scrolling=false;
+
+document.addEventListener('wheel',e=>{
+  if(scrolling) return;
+  scrolling=true;
+
+  if(e.deltaY>0 && current<scenes.length-1){
+    showScene(current+1);
+  }else if(e.deltaY<0 && current>0){
+    showScene(current-1);
+  }
+
+  setTimeout(()=>scrolling=false,1000);
+});
+
 let startY=0;
 
 document.addEventListener('touchstart',e=>{
@@ -26,35 +57,14 @@ document.addEventListener('touchend',e=>{
   let endY=e.changedTouches[0].clientY;
 
   if(startY-endY>50 && current<scenes.length-1){
-    current++;
-    showScene(current);
+    showScene(current+1);
   }
   else if(endY-startY>50 && current>0){
-    current--;
-    showScene(current);
+    showScene(current-1);
   }
 });
 
-// SCROLL PC
-let scrolling=false;
-
-document.addEventListener('wheel',e=>{
-  if(scrolling) return;
-
-  scrolling=true;
-
-  if(e.deltaY>0 && current<scenes.length-1){
-    current++;
-    showScene(current);
-  }else if(e.deltaY<0 && current>0){
-    current--;
-    showScene(current);
-  }
-
-  setTimeout(()=>scrolling=false,800);
-});
-
-// 🌊 TINTA
+// ================= TINTA CURSOR =================
 const ink=document.getElementById('ink');
 
 function moveInk(x,y){
@@ -68,29 +78,24 @@ function moveInk(x,y){
   },200);
 }
 
-document.addEventListener('mousemove',e=>{
-  moveInk(e.clientX,e.clientY);
-});
+document.addEventListener('mousemove',e=>moveInk(e.clientX,e.clientY));
+document.addEventListener('touchmove',e=>moveInk(e.touches[0].clientX,e.touches[0].clientY));
 
-document.addEventListener('touchmove',e=>{
-  moveInk(e.touches[0].clientX,e.touches[0].clientY);
-});
-
-// 🎵 AUDIO
+// ================= AUDIO =================
 const music = document.getElementById('music');
 const ambient = document.getElementById('ambient');
 const musicBtn = document.querySelector('.music-control');
 
-music.src = "wuji.mp3";
-ambient.src = "viento.mp3";
+music.src="wuji.mp3";
+ambient.src="viento.mp3";
 
-music.loop = true;
-ambient.loop = true;
+music.loop=true;
+ambient.loop=true;
 
-music.volume = 0.5;
-ambient.volume = 0.3;
+music.volume=0.5;
+ambient.volume=0.3;
 
-let playing = false;
+let playing=false;
 
 async function toggleMusic(){
   try{
@@ -98,19 +103,17 @@ async function toggleMusic(){
       await music.play();
       await ambient.play();
       musicBtn.classList.add('playing');
-      playing = true;
+      playing=true;
     }else{
       music.pause();
       ambient.pause();
       musicBtn.classList.remove('playing');
-      playing = false;
+      playing=false;
     }
-  }catch(err){
-    console.log("Audio bloqueado:", err);
-  }
+  }catch(e){console.log(e);}
 }
 
-// CARTA
+// ================= CARTA =================
 const textCarta=`Si tú fueras Wei Wuxian...
 yo sería Jiang Yanli.
 
@@ -125,9 +128,12 @@ function type(){
     setTimeout(type,40);
   }
 }
-type();
 
-// 🌸 PÉTALOS
+function openLetter(){
+  document.getElementById("cartaBox").classList.add("show");
+}
+
+// ================= PÉTALOS =================
 function createPetal(){
   const p=document.createElement('div');
   p.className='petal';
@@ -138,7 +144,6 @@ function createPetal(){
   p.style.left=Math.random()*100+'vw';
 
   p.style.setProperty('--drift',(Math.random()*150-75)+'px');
-
   p.style.background='radial-gradient(circle,#ffb6c1,#ff6b81)';
   p.style.animationDuration=(6+Math.random()*6)+'s';
 
@@ -148,7 +153,7 @@ function createPetal(){
 
 setInterval(createPetal,350);
 
-// QUIZ
+// ================= QUIZ =================
 const quiz=[
   {
     q:"¿Qué valoras más?",
@@ -264,13 +269,18 @@ function loadQuestion(){
   const question=document.getElementById("question");
   const options=document.querySelectorAll(".quiz-option");
 
-  if(!question) return;
-
   question.innerText=q.q;
 
   q.a.forEach((opt,i)=>{
     const textEl=options[i].querySelector(".opt-text");
-    if(textEl) textEl.innerText=opt.text;
+    textEl.innerText=opt.text;
+
+    // 👇 altura dinámica si texto largo
+    if(opt.text.length > 18){
+      options[i].style.height="130px";
+    }else{
+      options[i].style.height="110px";
+    }
   });
 }
 
@@ -287,15 +297,12 @@ function answer(i){
   }
 }
 
-// RESULTADO
+// ================= RESULTADO =================
 function showResult(){
 
-  let clanClass = "";
+  let winner=Object.keys(score).reduce((a,b)=>score[a]>score[b]?a:b);
 
-  let winner=Object.keys(score).reduce((a,b)=>
-    score[a]>score[b]?a:b
-  );
-
+  let clanClass="";
   let text="";
 
   if(winner==="jiang"){
@@ -306,20 +313,26 @@ Eres alguien en quien confiar, un refugio seguro en tiempos de tormenta.
 La verdad, tilín, es que hay mucho de ti en este clan pues tu alma libre y sentido de justicia te definen.`;
   }
 
-  if(winner==="lan"){ text=`Clan Lan 蓝 — calma y rectitud, como Lan Wangji.
+  if(winner==="lan"){
+    clanClass="clan-lan";
+    text=`Clan Lan 蓝 — calma y rectitud, como Lan Wangji.
 Eres dedicado y perfeccionista, te gusta que las cosas estén en orden y sigan un código.
 Tu integridad es admirable, y aunque a veces parezcas distante, tu corazón es profundo y leal.
 Sé que aunque guardes mucho de lo que sientes para ti, tu amor y sinceridad por los demás es inmenso.`;
   }
   
-  if(winner==="wen"){ clanClass="clan-wen"; text=`Clan Wen 温 — poder y ambición.
+  if(winner==="wen"){ 
+    clanClass="clan-wen"; 
+    text=`Clan Wen 温 — poder y ambición.
 Tienes grandes metas y sueños, y no temes luchar por ellos. Eres carismático y sabes cómo influir en los demás para lograr lo que quieres.
 Sólo hace falta ver la lucha que hiciste para conseguir boletos para el concierto de ENHYPEN;
 estoy segura de que así de determinado serás capaz de vender nabos para conseguir dinero.`;
 
   }
   
-  if(winner==="jin"){ text=`Clan Jin 金 — elegancia y orgullo.
+  if(winner==="jin"){ 
+    clanClass="clan-jin"; 
+    text=`Clan Jin 金 — elegancia y orgullo.
 Te gusta que todo se vea bonito y ordenado, y te esfuerzas por mantener una imagen impecable.
 Desde la photocard que vas a combinar con tu outfit coquette hasta tu feed de Instagram, todo refleja tu estilo único y sofisticado.
 Eres alguien que aprecia la belleza en todas sus formas,
@@ -327,14 +340,18 @@ y tu sentido del estilo es tan único que incluso es replicado en Pinterest.`;
 
   }
   
-  if(winner==="nie"){ clanClass="clan-nie"; text=`Clan Nie 聂 — fuerza y determinación.
+  if(winner==="nie"){ 
+    clanClass="clan-nie"; 
+    text=`Clan Nie 聂 — fuerza y determinación.
 Eres alguien que no se rinde fácilmente, y cuando te propones algo, lo haces con todo tu corazón.
 Tu energía intensa y tu pasión por lo que amas te hacen imparable, y aunque a veces puedas parecer un poco rudo, en el fondo tienes un gran corazón.
 Tu espíritu indomable es algo que admiro mucho, y sé que con esa fuerza de voluntad puedes lograr cualquier cosa que te propongas.`;
 
   }
   
-  if(winner==="wei"){ clanClass="clan-wei"; text=`Como Wei Wuxian 魏 — sigues tu propio camino.
+  if(winner==="wei"){ 
+    clanClass="clan-wei"; 
+    text=`Como Wei Wuxian 魏 — sigues tu propio camino.
 Eres alguien que no se conforma con seguir las reglas establecidas, y prefieres vivir de acuerdo a tus propias normas.
 Tu espíritu libre y tu naturaleza rebelde te hacen destacar entre la multitud, y aunque a veces puedas parecer un poco caótico, en el fondo tienes un gran corazón.
 Tu autenticidad es algo que admiro mucho, y sé que con esa actitud única puedes lograr cosas increíbles.
@@ -344,8 +361,7 @@ Hay mucho de Wei Wuxian en ti, y tal vez tenga mucho que ver con el hecho de que
 
   document.getElementById("quiz-box").style.display="none";
 
-  const ink=document.getElementById("ink-result");
-  ink.classList.add("show");
+  document.getElementById("ink-result").classList.add("show");
 
   const result=document.getElementById("quiz-result");
   result.innerHTML="";
@@ -354,75 +370,53 @@ Hay mucho de Wei Wuxian en ti, y tal vez tenga mucho que ver con el hecho de que
   setTimeout(()=>{
     writeText(text,result,clanClass);
   },400);
+
+  // 🎁 desbloquear regalo
+  document.getElementById("regaloFinal")?.classList.remove("hidden");
 }
 
-// ✨ TEXTO ORGÁNICO
-function writeText(text,container,clanClass){
+// ================= TEXTO PALABRA POR PALABRA =================
+function writeText(text, container, clanClass){
 
-  const keywords=[
-    "amor","hogar","fuerza","libre","justicia",
-    "elegancia","orgullo","poder","determinación",
-    "leal","corazón","familia","caótico"
-  ];
-
-  const words=text.split(" ");
+  const words = text.split(/(\s+)/);
   container.innerHTML="";
 
-  words.forEach((w,index)=>{
+  words.forEach((w,i)=>{
+    let span=document.createElement("span");
+    span.className="ink-word hidden";
 
-    let clean=w.toLowerCase().replace(/[.,]/g,"");
+    if(
+  w.includes("Clan") ||
+  w.includes("Jiang") ||
+  w.includes("Lan") ||
+  w.includes("Wen") ||
+  w.includes("Jin") ||
+  w.includes("Nie") ||
+  w.includes("Wei")
+){
+  span.classList.add(clanClass);
+}
 
-    let classes="ink-word hidden";
+    if(w.includes("Clan") || w.includes("—") || /[江蓝温金聂魏]/.test(w)){
+  span.classList.add(clanClass);
+}
 
-    // 🎯 clan (solo primeras palabras)
-    if(index<3){
-      classes+=` ${clanClass}`;
-    }
-
-    // ✨ palabras clave
-    if(keywords.includes(clean)){
-      classes+=" key";
-    }
-
-    if(w.includes("\n")){
-      const parts=w.split("\n");
-
-      parts.forEach((p,i)=>{
-        if(p!==""){
-          container.innerHTML+=`<span class="${classes}">${p}</span> `;
-        }
-        if(i<parts.length-1){
-          container.innerHTML+="<br>";
-        }
-      });
-
-    }else{
-      container.innerHTML+=`<span class="${classes}">${w}</span> `;
-    }
-
+    span.innerText = w;
+    container.appendChild(span);
   });
 
   const spans=container.querySelectorAll(".ink-word");
-
-  spans.forEach(s=>{
-    s.style.setProperty('--rand', Math.random()*0.3+'s');
-  });
 
   let i=0;
 
   function reveal(){
     if(i<spans.length){
-
       spans[i].classList.remove("hidden");
 
-      let word=spans[i].innerText;
-      let base=60;
-      let random=Math.random()*80;
+      let delay=70+Math.random()*80;
 
-      if(word.includes(",")) random+=80;
-      if(word.includes(".")) random+=150;
-
-      let delay=base+random;
+      if(spans[i].innerText.includes(",")) delay+=80;
+      if(spans[i].innerText.includes(".")) delay+=150;
 
       i++;
       setTimeout(reveal,delay);
@@ -432,6 +426,21 @@ function writeText(text,container,clanClass){
   reveal();
 }
 
+// ================= PLAYLIST =================
 function openSong(url){
-  window.open(url, "_blank");
+  window.open(url,"_blank");
+}
+
+// ================= MINI JUEGO =================
+function checkJar(el,win){
+  const fb=document.getElementById("game-feedback");
+
+  if(win){
+    el.style.filter="drop-shadow(0 0 15px gold)";
+    fb.innerText="¡Encontraste la Sonrisa del Emperador!";
+    fb.style.color="gold";
+  }else{
+    el.style.opacity="0.3";
+    fb.innerText="Jarra vacía...";
+  }
 }
