@@ -11,15 +11,17 @@
 
 <body>
 
+<!-- AUDIO -->
 <audio id="music" loop></audio>
 <audio id="ambient" loop></audio>
 
-<!-- BOTÓN MÚSICA (imagen) -->
+<!-- BOTÓN MÚSICA -->
 <div class="music-control" onclick="toggleMusic()">
   <img src="tres.png" class="img-btn">
   <span class="btn-text">音</span>
 </div>
 
+<!-- FONDO -->
 <div class="bg"></div>
 <div class="mist"></div>
 <div id="petals"></div>
@@ -27,46 +29,49 @@
 
 <main id="main">
 
-<section class="scene intro">
+<!-- INTRO -->
+<section class="scene intro active">
   <h1>予你</h1>
   <p>Para ti, en cualquier vida…</p>
 </section>
 
+<!-- POEMA -->
 <section class="scene poem">
   <p id="letter"></p>
 </section>
 
+<!-- PLAYLIST -->
 <section class="scene playlist">
 
-  <h2>🎧 Nuestra música</h2>
+  <h2>Playlist</h2>
 
   <div class="playlist-grid">
 
-    <div class="song" onclick="openSong('https://youtu.be/THEUNTAMED1')">
+    <div class="song" onclick="openSong('https://youtu.be/IYj6Zd7aMN8?si=KBgKgLv9_w9Jffr2')">
       <img src="song1.png">
-      <span>Wuji (无羁)</span>
+      <span>Corazón angustiado (意难平)</span>
     </div>
 
-    <div class="song" onclick="openSong('https://youtu.be/THEUNTAMED2')">
+    <div class="song" onclick="openSong('https://youtu.be/bkIcj_tDtuQ?si=XbIm8MOP97QLOp3D')">
       <img src="song2.png">
-      <span>Bu Wang (不忘)</span>
+      <span>Smile Flower</span>
     </div>
 
-    <div class="song" onclick="openSong('https://youtu.be/THEUNTAMED3')">
+    <div class="song" onclick="openSong('https://youtu.be/VpAnZCnVfFU?si=TgB1RcaUpvmu8-sx')">
       <img src="song2.png">
-      <span>Yi Nan Ping (意难平)</span>
+      <span>Always</span>
     </div>
 
-    <div class="song" onclick="openSong('https://youtu.be/THEUNTAMED4')">
+    <div class="song" onclick="openSong('https://youtu.be/Y5dR4izgkA4?si=KdOjzGxOc8n4NB4a')">
       <img src="song1.png">
-      <span>Hong Chen (红尘)</span>
+      <span>Breathe</span>
     </div>
 
   </div>
 
 </section>
 
-<!-- ELECCIÓN -->
+<!-- QUIZ -->
 <section class="scene quiz">
 
   <h2>¿A qué clan perteneces?</h2>
@@ -76,31 +81,118 @@
 
     <div class="answers">
 
-  <div class="quiz-option" onclick="answer(0)">
-    <img src="uno.png">
-    <span class="opt-text"></span>
+      <div class="quiz-option" onclick="answer(0)">
+        <img src="uno.png">
+        <span class="opt-text"></span>
+      </div>
+
+      <div class="quiz-option" onclick="answer(1)">
+        <img src="dos.png">
+        <span class="opt-text"></span>
+      </div>
+
+      <div class="quiz-option" onclick="answer(2)">
+        <img src="tres.png">
+        <span class="opt-text"></span>
+      </div>
+
+    </div>
   </div>
 
-  <div class="quiz-option" onclick="answer(1)">
-    <img src="dos.png">
-    <span class="opt-text"></span>
-  </div>
-
-  <div class="quiz-option" onclick="answer(2)">
-    <img src="tres.png">
-    <span class="opt-text"></span>
-  </div>
-
-</div>
-  </div>
-
-  <p id="quiz-result"></p>
-
-  <!-- TINTA RESULTADO -->
+  <!-- RESULTADO -->
   <div id="ink-result"></div>
+  <p id="quiz-result"></p>
 
 </section>
 
+<!-- MINI JUEGO -->
+<section class="scene game">
+
+  <h2>Encuentra la Sonrisa del Emperador</h2>
+  <p>¿En qué jarra está escondida?</p>
+
+  <div class="answers">
+
+    <div class="quiz-option" onclick="checkJar(this,false)">
+      <img src="jarra.png">
+    </div>
+
+    <div class="quiz-option" onclick="checkJar(this,true)">
+      <img src="jarra.png">
+    </div>
+
+    <div class="quiz-option" onclick="checkJar(this,false)">
+      <img src="jarra.png">
+    </div>
+
+  </div>
+
+  <p id="game-feedback" style="margin-top:20px;"></p>
+
+</section>
+
+<!-- CARTA -->
+<section class="scene carta">
+
+  <h2>¡Ha llegado una carta!</h2>
+
+  <div class="open-letter" onclick="openLetter()">
+    <img src="tres.png" class="img-btn">
+    <span class="btn-text">Abrir</span>
+  </div>
+
+  <div class="carta-box" id="cartaBox">
+    <p id="cartaTexto">
+¡Feliz cumpleaños, tilín!<br><br>
+
+Espero que te la pases genial en este día y que puedas ver lo apreciado que eres, pues sé que todos tus amigos tendrán detalles contigo, ya que es imposible no quererte.<br><br>
+
+Estoy tan orgullosa de ti y agradecida de ser tu hermana, de tenerte siempre conmigo. Quiero que sepas que, en la misma medida en que estás para mí, yo estaré para ti.<br><br>
+
+Quiero decirte tantas cosas, pero escribir esto me está haciendo llorar al darme cuenta de lo importante que eres para mí y de que no sabría qué hacer si algún día me hicieras falta.<br><br>
+
+Todo este regalo te lo hago con el corazón; en cada detalle está mi sinceridad y mi aprecio hacia ti.<br><br>
+
+Sabes, la última canción de la playlist es bastante personal para mí, y dedicártela me hace sentir que comparto mi mundo contigo. La escucho desde hace 8 años y ha sido de mis canciones favoritas hasta la fecha. Esa canción siempre me ha dado ánimos, pues son palabras que toda la vida quise escuchar.<br><br>
+
+Hoy te la dedico y espero que te dé tanto consuelo como lo hizo con la pequeña Priscilla de 13 años. Que la escuches teniendo presente que tú no tienes que esperar a que alguien te diga todo eso, pues es el eco de lo que siempre haré por ti: seré yo quien te abrace.<br><br>
+
+Eres una persona increíble y quisiera darte mis ojos para que te veas como yo te veo, que notes que eres bueno y valiente, compasivo y leal; me duele mucho que pienses tan mal de ti.<br><br>
+
+No sé cuál fue el bien que hice en mi vida pasada para tenerte a ti como hermano en esta vida, pero estoy eternamente agradecida y daré lo mejor de mí en mi presente para tenerte conmigo en todas las vidas que vienen.<br><br>
+
+Siempre tendrás una hermana mayor en quien apoyarte y, cuando los demás no puedan, tu hermana siempre va a poder.<br><br>
+
+Por ti seré ChatGPT, doctora, psicóloga y todo lo que quieras, siempre que te ayude; pero permíteme ayudarte, por favor.<br><br>
+
+Sigamos viendo más dramas chinos juntos; lloremos y emocionémonos en el proceso, pero siempre hay que hacerlo juntos.<br><br>
+
+Aunque todo el mundo se ponga en tu contra, yo siempre estaré de tu lado. Y aun si todos hablan mal de ti y de cosas que hiciste, yo conozco a mi hermano y sé que nada de eso es verdad; yo también daría mi vida por protegerte, como Yanli hizo por Wuxian.<br><br>
+
+Gracias por estar, por ser quien eres, por ser mi hermano.<br><br>
+
+Te amo, tilín. Espero que seas muy feliz hoy y todos los días, tan feliz como tú me haces.
+    </p>
+  </div>
+
+</section>
+
+<!-- 🎁 REGALO (SECCIÓN PROPIA) -->
+<section class="scene regalo">
+
+  <h2>Para ti</h2>
+  <p>Hay algo más esperándote…</p>
+
+  <div style="margin-top:80px;">
+    <a href="https://drive.google.com/drive/folders/1UVYX8MBnxVR7d7Pw2yVpf_6EMvv2Fnob?usp=sharing" target="_blank">
+      <img src="abanico.png" class="img-btn">
+      <span class="btn-text">Abrir regalo</span>
+    </a>
+  </div>
+
+</section>
+
+<!-- FINAL -->
 <section class="scene final">
   <p>El tiempo pasa…</p>
   <h2>pero tú siempre serás mi hogar</h2>
